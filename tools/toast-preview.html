@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- Preview harness for the notification overlay (src/toast.html). -->
+<html lang="ru"><head><meta charset="utf-8"><title>Toast preview</title>
+<base href="../src/">
+<link rel="stylesheet" href="toast.css">
+<style>body{background:#1d2733;padding:20px;}</style>
+<script>
+window.__handler = null;
+window.radmincraftToast = {
+  onAdd: cb => { window.__handler = cb; },
+  reportHeight: h => { document.title = 'h=' + h; window.__h = h; },
+  reportEmpty: () => { window.__h = 0; document.title = 'empty'; },
+  open: p => { window.__opened = p; }
+};
+window.addEventListener('load', () => setTimeout(() => {
+  window.__handler({ id:'1', kind:'join',    title:'Masha зашла на сервер',   body:'MagasCraft · сейчас в игре', page:'chat' });
+  window.__handler({ id:'2', kind:'mention', title:'Alex упомянул вас',        body:'@RamazanTM идёшь в шахту?', page:'chat' });
+  window.__handler({ id:'3', kind:'voice',   title:'Vlad зовёт в голосовой',   body:'Нажмите, чтобы присоединиться', page:'voice' });
+}, 50));
+</script>
+<script src="toast.js" defer></script>
+</head><body><div class="stack" id="stack"></div></body></html>

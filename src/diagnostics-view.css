@@ -1,0 +1,97 @@
+/* Diagnostics block embedded in the Settings page. */
+.diag-section {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--om-line-soft, #1d262c);
+  border-radius: 12px;
+  background: var(--om-bg-raised, #0f1519);
+}
+
+.diag-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.diag-head .setting-copy { display: grid; gap: 3px; min-width: 0; }
+.diag-sub { color: var(--om-muted, #8f9ba3); }
+.diag-run { white-space: nowrap; }
+
+.diag-verdict { font-size: 15px; }
+.diag-verdict[hidden] { display: none; }
+.reserve-host-setting[hidden] { display: none !important; }
+.diag-verdict[data-state="ok"] { color: var(--om-green-bright, #9bd172); }
+.diag-verdict[data-state="fail"] { color: var(--om-danger, #e76875); }
+.diag-verdict[data-state="warn"] { color: #d9a441; }
+.diag-verdict[data-state="running"] { color: var(--om-purple-bright, #b78bef); }
+
+.diag-steps { display: grid; gap: 8px; }
+.diag-steps:empty { display: none; }
+.diag-step {
+  display: grid; grid-template-columns: 20px 1fr; gap: 11px;
+  padding: 10px 12px;
+  border: 1px solid var(--om-line-soft, #1d262c);
+  border-radius: 10px;
+  background: var(--om-panel, #12191e);
+}
+.diag-step-icon { text-align: center; font-size: 13px; line-height: 1.5; }
+.diag-step[data-status="ok"] .diag-step-icon { color: var(--om-green-bright, #9bd172); }
+.diag-step[data-status="fail"] .diag-step-icon { color: var(--om-danger, #e76875); }
+.diag-step[data-status="warn"] .diag-step-icon { color: #d9a441; }
+.diag-step[data-status="skip"] .diag-step-icon { color: var(--om-muted, #8f9ba3); }
+
+.diag-step-body { display: grid; gap: 2px; min-width: 0; }
+.diag-step-label { font-weight: 600; font-size: 13px; }
+.diag-step-detail { color: var(--om-muted, #8f9ba3); font-size: 12px; }
+.diag-step-hint { font-size: 12px; line-height: 1.45; color: #d5b98a; }
+.diag-step[data-status="fail"] .diag-step-hint { color: #f0a6ad; }
+
+.diag-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.diag-ghost {
+  background: transparent;
+  border: 1px solid var(--om-line, #27323a);
+  color: var(--om-text, #eef2f3);
+  box-shadow: none;
+}
+.diag-ghost:hover { border-color: var(--om-purple, #9a6adb); background: #ffffff08; }
+.diag-time { color: var(--om-muted, #8f9ba3); font-size: 12px; }
+
+@media (max-width: 620px) {
+  .diag-head { flex-direction: column; align-items: stretch; }
+  .diag-run { width: 100%; }
+}
+
+/* Host-only danger zone at the bottom of Settings. */
+.danger-zone {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid #e7687533;
+  border-radius: 12px;
+  background: #e767510a;
+}
+.danger-zone[hidden] { display: none; }
+.danger-legend {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e79098;
+}
+.danger-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.danger-row .setting-copy { display: grid; gap: 3px; min-width: 0; }
+.danger-row .setting-copy strong { color: #f0a6ad; }
+.danger-row .setting-copy small { color: var(--om-muted, #8f9ba3); }
+.danger-button {
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid #e7687560;
+  color: #f0a6ad;
+  box-shadow: none;
+}
+.danger-button:hover:not(:disabled) { background: #e7687519; border-color: #e76875; color: #fff; }
+.danger-button:disabled { opacity: 0.5; cursor: default; }
+.danger-result { color: #f0a6ad; font-size: 12px; }
+.danger-result.is-ok { color: var(--om-green-bright, #9bd172); }
+
+@media (max-width: 620px) {
+  .danger-row { flex-direction: column; align-items: stretch; }
+  .danger-button { width: 100%; }
+}

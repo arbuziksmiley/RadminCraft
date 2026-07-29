@@ -1,0 +1,37 @@
+:root { font-family: "Segoe UI", system-ui, sans-serif; }
+html, body { height: 100%; overflow: hidden; }
+.app { height: 100vh; min-height: 0; overflow: hidden; }
+body, input, button, output { font-family: inherit; }
+main { max-width: none !important; min-width: 0; height: 100vh; overflow: hidden; }
+.page.active { height: 100%; min-height: 0; overflow-y: auto; }
+.grid { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); }
+#chat.page.active { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+#chat .grid { flex: 1; min-height: 0; }
+#chat .grid > article.card { display: flex; flex-direction: column; min-height: 0; }
+#chat .feed { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+#chat .grid > article.card form { margin-top: auto; }
+@media (min-width: 1500px) { main { padding-inline: 54px; } .grid { grid-template-columns: minmax(0, 1fr) 360px; } }
+
+body[data-theme="light"] { color: #282433; background: #f5f3f8; }
+body[data-theme="light"] .side { background: #eeebf3; border-color: #d9d3e3; }
+body[data-theme="light"] .nav, body[data-theme="light"] button { background: #e3deeb; color: #302b3a; }
+body[data-theme="light"] .nav.active, body[data-theme="light"] button:hover { background: #cbb7f0; }
+body[data-theme="light"] .card, body[data-theme="light"] .voice-tile, body[data-theme="light"] .themes-clean, body[data-theme="light"] .minecraft-link { background: #fff; border-color: #ddd6e7; }
+body[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]), body[data-theme="light"] .minecraft-command code { background: #f7f5fa; border-color: #d8d1e2; color: #302b3a; }
+body[data-theme="light"] p, body[data-theme="light"] small, body[data-theme="light"] .muted, body[data-theme="light"] .link-status { color: #6d6579; }
+body[data-theme="light"] .map { background: linear-gradient(130deg, #c5ddc7, #b7c6dc); }
+body[data-theme="light"] .brand { color: #513b7d; }
+body[data-theme="light"] .side nav .nav-icon img { filter: brightness(.5) saturate(1.8); }
+body[data-theme="light"] .setting-copy small, body[data-theme="light"] .minecraft-link p { color: #665f72; }
+body[data-theme="light"] .rerun-setup { color: #60477f !important; }
+body[data-theme="light"] .self small, body[data-theme="light"] .message-delete { color: #625a70; }
+body[data-theme="light"] .game-status { color: #207a48; }
+body[data-theme="light"] .launcher-status { color: #9a6500; }
+body[data-theme="light"] .network { color: #b45213; }
+body[data-theme="light"] .mention { background: #e3d4ff; color: #4f277d; }
+
+button, input, select, .card, .voice-tile, .invite-toast { transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, opacity 160ms ease, transform 160ms ease; }
+button:active { transform: translateY(1px); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

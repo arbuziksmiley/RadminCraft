@@ -1,0 +1,286 @@
+/* Settings workspace: compact master/detail layout for a Windows desktop app. */
+#settings.active {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 18px 24px;
+  width: min(100%, 1080px);
+  max-width: 1080px;
+  min-width: 0;
+  overflow: visible;
+}
+#settings > header { grid-column: 1 / -1; margin: 0; }
+#settings > .settings {
+  grid-column: 2;
+  grid-row: 2;
+  width: 100%;
+  min-width: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+.settings-tabs {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #2b3840;
+  border-radius: 14px;
+  background: #111a1fda;
+  box-shadow: 0 14px 34px #0000001c;
+}
+.settings-tabs button {
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #9da9b0;
+  font-size: 14px;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+.settings-tabs button:hover { color: #eff3f5; background: #ffffff09; }
+.settings-tabs button:active { transform: translateY(1px); }
+.settings-tabs button.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, #8053b5, #70459f);
+  box-shadow: 0 7px 18px #5d338b35;
+}
+.settings-tabs button:focus-visible { outline: 2px solid #c496f5; outline-offset: 2px; }
+
+.settings-pane {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  min-width: 0;
+  padding: 8px 22px;
+  border: 1px solid #2b3840;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #121c21f2, #10181df2);
+  box-shadow: 0 18px 44px #00000022;
+}
+.settings-pane[hidden] { display: none; }
+.settings-pane > .setting-item-clean,
+.sound-setting-row {
+  display: grid;
+  grid-template-columns: minmax(220px, .9fr) minmax(280px, 1.1fr);
+  align-items: center;
+  gap: 28px;
+  min-width: 0;
+  min-height: 78px;
+  padding: 16px 0;
+}
+.sound-setting-row {
+  grid-template-columns: 1fr;
+  gap: 11px;
+}
+.sound-setting-row .setting-copy small { max-width: 620px; }
+.settings-pane > .setting-item-clean + .setting-item-clean,
+.sound-setting-row + .sound-setting-row,
+.notify-group + .setting-item-clean { border-top: 1px solid #ffffff0c; }
+.setting-copy { display: grid; gap: 5px; min-width: 0; }
+.setting-copy strong { color: #eef2f3; font-size: 14px; line-height: 1.35; }
+.setting-copy small { color: #939fa6; font-size: 12px; line-height: 1.5; }
+.settings-pane input:not([type="checkbox"]):not([type="range"]),
+.settings-pane select,
+.launcher-picker {
+  width: 100%;
+  min-width: 0;
+}
+.launcher-picker { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.launcher-picker button { min-height: 42px; white-space: nowrap; }
+.settings-pane input[type="checkbox"] { justify-self: end; }
+
+/* Sound mixer: every row uses the same compact control rhythm. */
+.sound-setting-controls {
+  display: grid;
+  grid-template-columns: minmax(142px, .95fr) minmax(120px, 1fr) 44px 38px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  width: min(100%, 690px);
+  justify-self: stretch;
+}
+.voice-volume-controls {
+  grid-template-columns: minmax(160px, 1fr) 48px;
+  width: min(100%, 330px);
+  justify-self: start;
+}
+.sound-setting-controls select,
+.audio-device-grid select {
+  min-height: 42px;
+  padding: 9px 34px 9px 11px;
+  border: 1px solid #34434c;
+  border-radius: 9px;
+  background: #0c151a;
+  color: #e5eaec;
+  font: inherit;
+}
+.sound-setting-controls input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  height: 22px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.sound-setting-controls input[type="range"]::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 99px;
+  background: linear-gradient(to right, #a66de1 0 var(--range-value, 0%), #425058 var(--range-value, 0%) 100%);
+}
+.sound-setting-controls input[type="range"]::-webkit-slider-thumb {
+  width: 17px;
+  height: 17px;
+  margin-top: -6px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: 50%;
+  background: #b17ae7;
+  box-shadow: 0 1px 5px #0008;
+}
+.sound-setting-controls output {
+  color: #d9c9ec;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.sound-test {
+  width: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  overflow: hidden;
+  color: transparent !important;
+  font-size: 0 !important;
+  border: 1px solid #34434c !important;
+  background: #ffffff08 !important;
+}
+.sound-test::before {
+  content: "▶";
+  display: grid;
+  place-items: center;
+  color: #d8c4ef;
+  font-size: 12px;
+}
+.sound-section-title {
+  display: grid;
+  gap: 5px;
+  padding: 20px 0 9px;
+  border-top: 1px solid #ffffff10;
+}
+.sound-section-title strong { color: #eef2f3; font-size: 15px; }
+.sound-section-title small { color: #939fa6; line-height: 1.5; }
+.device-section-title {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  margin-top: 8px;
+}
+.device-section-title > div { display: grid; gap: 5px; }
+.refresh-devices {
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 1px solid #3a4851;
+  background: #ffffff08;
+  color: #e4d9ed;
+  white-space: nowrap;
+}
+.audio-device-grid {
+  display: grid;
+  gap: 0;
+  margin: 8px 0 14px;
+  padding: 0 15px;
+  border: 1px solid #2f3d45;
+  border-radius: 11px;
+  background: #0a12168a;
+}
+.audio-device-grid label {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  min-height: 64px;
+  color: #c3cbd0;
+  font-size: 12px;
+}
+.audio-device-grid label + label { border-top: 1px solid #ffffff0c; }
+
+/* Modules added by other settings scripts inherit the same section language. */
+.settings-pane > .connection-info,
+.settings-pane > .diag-section,
+.settings-pane > .settings-more,
+.settings-pane > .host-tools,
+.settings-pane > section {
+  margin: 14px 0;
+  border-color: #304048 !important;
+  border-radius: 11px !important;
+  background: #0b141986 !important;
+}
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 18px 0 12px;
+  border-top: 1px solid #ffffff0c;
+}
+.settings-actions > button { min-height: 42px; }
+.settings-more { flex: 1 1 100%; margin-top: 4px !important; }
+.notify-group { display: grid; }
+.notify-group .setting-item-clean {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  min-height: 64px;
+  padding: 12px 0 12px 18px;
+  border-top: 1px solid #ffffff0a;
+}
+.notify-group input { justify-self: end; }
+.settings input:disabled { cursor: not-allowed; opacity: .5; }
+
+@media (max-width: 1120px) {
+  #settings.active { grid-template-columns: 164px minmax(0, 1fr); gap: 16px; }
+  .settings-pane { padding-inline: 18px; }
+  .settings-pane > .setting-item-clean { grid-template-columns: minmax(185px, .75fr) minmax(250px, 1.25fr); gap: 18px; }
+  .sound-setting-row { grid-template-columns: 1fr; gap: 11px; }
+  .sound-setting-controls { grid-template-columns: minmax(130px, 1fr) minmax(110px, 1fr) 42px 38px; }
+}
+@media (max-width: 900px) {
+  #settings.active { grid-template-columns: 132px minmax(0, 1fr); gap: 12px; }
+  .settings-tabs { grid-column: 1; grid-row: 2; }
+  #settings > .settings { grid-column: 2; grid-row: 2; }
+  .settings-tabs button { padding-inline: 10px; font-size: 12px; }
+  .settings-pane > .setting-item-clean { grid-template-columns: 1fr; gap: 10px; }
+  .voice-volume-controls { justify-self: stretch; width: 100%; }
+}
+@media (max-width: 680px) {
+  #settings.active { grid-template-columns: 1fr; }
+  .settings-tabs { grid-column: 1; grid-row: 2; grid-template-columns: 1fr 1fr; }
+  #settings > .settings { grid-column: 1; grid-row: 3; }
+  .settings-pane { padding-inline: 14px; }
+  .sound-setting-controls { grid-template-columns: minmax(0, 1fr) 42px 38px; }
+  .sound-setting-controls select { grid-column: 1 / -1; }
+  .device-section-title { grid-template-columns: 1fr; }
+  .refresh-devices { justify-self: start; }
+  .audio-device-grid label { grid-template-columns: 1fr; gap: 7px; padding: 12px 0; }
+  .launcher-picker { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .settings-tabs button { transition: none; }
+}

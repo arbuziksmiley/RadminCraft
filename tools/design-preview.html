@@ -1,0 +1,100 @@
+<!doctype html>
+<!-- Design preview harness. Loads the real UI with a stubbed window.radmincraft
+     so the interface can be inspected in a plain browser while iterating on CSS.
+     Not shipped: excluded from the installer via the "files" list in package.json. -->
+<html lang="ru"><head><meta charset="utf-8"><title>RadminCraft — design preview</title>
+<base href="../src/">
+<script>
+// Cache-busting loader: the preview is edited constantly, and a stale cached
+// module silently hides the change being reviewed.
+const BUST = Date.now();
+['styles', 'tray', 'layout-fixes', 'minecraft-theme', 'voice-view', 'nav-fixes', 'enhancements',
+ 'avatar-crop', 'chat-safety', 'setup-wizard', 'setup-help', 'map-view', 'audio-settings',
+ 'voice-invites', 'server-mods', 'diagnostics-view', 'notifications', 'voice-mini', 'server-setup', 'design-system'
+].forEach(name => {
+  document.write(`<link rel="stylesheet" href="${name}.css?b=${BUST}">`);
+});
+</script>
+<script>
+// ─── Stub of the Electron bridge ────────────────────────────────────────
+const mockSettings = {
+  displayName: 'RamazanTM', avatar: 'head-007', avatarImage: '', serverName: 'MagasCraft',
+  mode: 'host', hostAddress: '26.199.112.238:18483', onboardingCompleted: true,
+  launcherPath: 'C:\\Games\\TLauncher.exe', theme: 'soft', notificationsEnabled: true, volume: 70,
+  notifyChatAll: false, notifyMentions: true, notifyVoiceInvite: true, notifyPlayerJoin: true,
+  mapPort: 8100, mapUrl: '', modsUrl: '', contactAliases: {}, mcVersion: '1.20.1 Forge',
+  incomingMessageVolume: 70, outgoingMessageVolume: 45, voiceInviteVolume: 70,
+  incomingMessageSound: 'message-1', outgoingMessageSound: 'message-2', voiceInviteSound: 'invite-1'
+};
+const mockPeople = [
+  { id: 'a', name: 'RamazanTM', avatar: 'head-007', status: 'game', role: 'host', voiceJoined: true, voiceSpeaking: true, micEnabled: true },
+  { id: 'b', name: 'Masha', avatar: 'head-021', status: 'game', role: 'client', voiceJoined: true, micEnabled: true },
+  { id: 'c', name: 'Alex', avatar: 'head-033', status: 'launcher', role: 'client', voiceJoined: true, micEnabled: false },
+  { id: 'd', name: 'Vlad', avatar: 'head-045', status: 'network', role: 'client', voiceJoined: false, micEnabled: true }
+];
+const t = (h, m) => `${h}:${m}`;
+const mockMessages = [
+  ['head-021', 'Masha', 'game', 'Я уже у деревни, собираю еду', t('20','12'), null, 'm1', 'b'],
+  ['head-033', 'Alex', 'app', '@RamazanTM идёшь в шахту?', t('20','14'), null, 'm2', 'c'],
+  ['head-007', 'RamazanTM', 'host', 'Через пять минут буду, добиваю ресурсы', t('19','28'), null, 'm3', 'a'],
+  ['head-045', 'Vlad', 'app', 'у меня лаги какие-то, перезайду', t('19','31'), null, 'm4', 'd']
+];
+const ok = extra => Promise.resolve(Object.assign({ ok: true }, extra || {}));
+window.radmincraft = {
+  loadSettings: () => Promise.resolve({ ...mockSettings }),
+  saveSettings: p => Promise.resolve(Object.assign(mockSettings, p)),
+  openLauncher: () => ok(), getLauncherStatus: () => Promise.resolve({ active: false, path: '' }),
+  chooseLauncher: () => ok(), chooseAvatar: () => ok(),
+  loadMessages: () => Promise.resolve(mockMessages.map(m => m.slice())),
+  saveMessages: () => ok(),
+  getLanStatus: () => ok({ mode: 'host', address: '26.199.112.238:18483', serverName: 'MagasCraft', mcVersion: '1.20.1 Forge', mapPort: 8100, mapUrl: '', modsUrl: '' }),
+  getLanAddress: () => Promise.resolve('26.199.112.238:18483'),
+  getRadminVpnStatus: () => Promise.resolve({ detected: true, address: '26.199.112.238:18483', adapter: 'Radmin VPN' }),
+  getLanMessages: () => ok({ messages: mockMessages.map(m => m.slice()) }),
+  sendLanMessage: () => ok(), updateMessageProfile: () => ok(), deleteLanMessage: () => ok(),
+  clearLanMessages: () => ok({ removed: 0 }),
+  sendLanPresence: () => ok(), checkDisplayName: () => ok({ available: true }),
+  getLanPeople: () => ok({ people: mockPeople }),
+  ensureFirewallAccess: () => ok(),
+  chooseServerFolder: () => ok({ path: 'C:\\Servers\\MagasCraft', hasLog: true }),
+  diagnoseBridge: () => Promise.resolve({ logConfigured: true, logFound: true, bluemapOk: true, players: 2 }),
+  getBridgeStatus: () => ok({ connected: true, players: 2, mapPlayers: [] }),
+  getMapInfo: () => ok({ reachable: false, url: 'http://26.199.112.238:8100/', port: 8100, mode: 'host', customUrl: '' }),
+  openMapExternal: () => ok(), openMods: () => ok(),
+  openWidget: () => {}, setWidgetState: () => {},
+  showNotification: () => ok(), isWindowFocused: () => Promise.resolve(true),
+  sendVoiceSignal: () => ok(), getVoiceSignals: () => ok({ signals: [] }),
+  sendVoiceInvite: () => ok(), getVoiceInvites: () => ok({ invites: [] }),
+  getPublicIdentity: () => Promise.resolve({ deviceId: 'a' }),
+  getDiagnosticsPath: () => Promise.resolve('C:\\logs'), openDiagnosticsFolder: () => ok(),
+  runNetworkDiagnostics: () => Promise.resolve({
+    time: new Date().toISOString(), mode: 'host', ok: false, summary: 'firewall',
+    steps: [
+      { id: 'adapter', label: 'Адаптер Radmin VPN', status: 'ok', detail: 'Radmin VPN · 26.199.112.238', hint: '' },
+      { id: 'port', label: 'Локальный порт 18483', status: 'ok', detail: 'Host слушает порт', hint: '' },
+      { id: 'firewall', label: 'Правило брандмауэра', status: 'warn', detail: 'Разрешающее правило не найдено', hint: 'Нажмите «Разрешить в брандмауэре» (потребуется UAC).' }
+    ]
+  })
+};
+</script>
+<script>
+// Same module order as index.html. async=false keeps execution order for
+// dynamically inserted scripts, which the layered UI depends on.
+// renderer.js first: in index.html it is a classic script at the end of <body>,
+// so it runs before the deferred modules and defines the globals (messages,
+// people) that chat-safety.js relies on.
+['renderer',
+ 'notifications', 'avatar-crop', 'settings-layout', 'voice-view', 'voice-mini', 'server-name', 'nav-fixes',
+ 'enhancements', 'chat-safety', 'setup-help', 'map-view', 'voice-invites', 'audio-settings',
+ 'server-mods', 'connection-extras', 'notification-settings', 'diagnostics-view', 'host-tools', 'server-setup'
+].forEach(name => {
+  document.write(`<script src="${name}.js?b=${BUST}" defer><\/script>`);
+});
+</script>
+</head>
+<body data-theme="soft"><div class="app"><aside class="side"><div class="brand">RadminCraft</div><nav><button class="nav active" data-page="chat">Общий чат</button><button class="nav" data-page="voice">Голосовой чат</button><button class="nav" data-page="map">Карта</button><button class="nav" data-page="settings">Настройки</button></nav><button class="self nav" data-page="profile"><b id="self-avatar">В</b><span><strong id="self-name">Вы</strong><small class="network">● в сети</small></span></button></aside><main>
+<section id="chat" class="page active"><header><div><h1>RadminCraft SMP <em>1.20.1 Forge</em></h1><p>Один чат для сообщества и игры</p></div><strong class="online">● Сервер запущен</strong></header><div class="grid"><article class="card"><div class="row"><h2>Общий чат</h2><small>Последние 500 сообщений</small></div><div id="feed" class="feed"></div><form id="chat-form"><input id="chat-input" maxlength="600" placeholder="Написать всем…" autocomplete="off"><button>Отправить</button></form></article><aside class="stack"><article class="card"><div class="row"><h2>Онлайн</h2><em>4</em></div><div id="online-list"></div></article><article class="card"><em>Minecraft</em><h2>Ваш лаунчер</h2><p>Открывается только на вашем компьютере.</p><button id="launch">Запустить лаунчер</button></article></aside></div></section>
+<section id="voice" class="page"><header><div><h1>Голосовой чат</h1><p>Общий голосовой канал</p></div><em>Подключено</em></header><article class="card"><div class="row"><h2>RadminCraft SMP</h2><button id="mic">Микрофон включён</button></div><p>Здесь только участники, подключённые к голосовому каналу.</p><div id="voice-list"></div></article></section>
+<section id="map" class="page"><header><div><h1>Карта</h1><p>Веб-карта сервера</p></div></header><article class="card map">База <span>Деревня</span></article></section><section id="settings" class="page"><header><div><h1>Настройки</h1><p>Профиль сообщества, уведомления и диагностика</p></div></header><article class="card settings"><label>Путь к лаунчеру<input id="launcher-path" placeholder="C:\Games\Launcher.exe"></label><label>Громкость <output id="volume-out">70%</output><input id="volume" type="range" min="0" max="100" value="70"></label><label>Уведомления<input id="notify" type="checkbox" checked></label><button id="save-settings">Сохранить настройки</button></article></section>
+<section id="profile" class="page"><header><div><h1>Ваш профиль</h1><p>Так вас видят друзья</p></div></header><article class="card profile"><div class="profile-head"><b id="profile-avatar">В</b><h2 id="profile-title">Вы</h2></div><div id="avatars" class="avatars"></div><label>Отображаемое имя<input id="display-name" maxlength="20" value="RamazanTM"><span class="profile-name-meta"><small id="profile-name-error" aria-live="polite"></small><small id="profile-name-count">9/20</small></span></label><button id="save-profile">Сохранить изменения</button></article></section>
+</main></div></body></html>

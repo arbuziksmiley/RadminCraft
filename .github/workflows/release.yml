@@ -1,0 +1,56 @@
+name: Release Windows installer
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install exact dependencies
+        run: npm ci
+
+      - name: Validate JavaScript
+        run: npm run check
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Windows installer
+        run: npm run dist
+
+      - name: Create SHA-256 manifest
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem release/RadminCraft-Setup-*.exe -File | Select-Object -First 1
+          $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash *$($installer.Name)" | Set-Content release/SHA256SUMS.txt -Encoding ascii
+
+      - name: Publish GitHub Release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $installer = Get-ChildItem release/RadminCraft-Setup-*.exe -File | Select-Object -First 1
+          $blockmap = Get-ChildItem release/RadminCraft-Setup-*.exe.blockmap -File | Select-Object -First 1
+          gh release create "${{ github.ref_name }}" `
+            $installer.FullName `
+            $blockmap.FullName `
+            "release/latest.yml" `
+            "release/SHA256SUMS.txt" `
+            --title "RadminCraft ${{ github.ref_name }}" `
+            --generate-notes

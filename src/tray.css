@@ -1,0 +1,2 @@
+/* Compact status lives in the Windows notification area, not inside the app window. */
+#widget-panel { display: none !important; }

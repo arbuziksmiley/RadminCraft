@@ -1,0 +1,946 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Design system consolidation — loaded last, so it settles arguments
+   between the older stylesheets rather than adding a new one.
+
+   Measured before writing this file: seven different control heights
+   (30/37/42/44/45/52/58px) and four radii (9/10/11/12px) were in play at
+   once. Controls sitting in the same row disagreed by a pixel or two,
+   which reads as sloppiness even when nothing is obviously broken.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* One spacing scale, all multiples of 4. */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+
+  /* Three radii. Controls, cards, pills — nothing else. */
+  --r-control: 9px;
+  --r-card: 12px;
+  --r-pill: 99px;
+
+  /* Two control heights: standard and compact. */
+  --h-control: 42px;
+  --h-compact: 34px;
+
+  --om-amber: #d9a441;
+}
+
+/* ── Controls line up ────────────────────────────────────────────────── */
+.card > button,
+.profile button,
+form button,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select {
+  min-height: var(--h-control);
+  border-radius: var(--r-control);
+}
+
+/* The compose row: text field, emoji, stickers and Send were 45/44/44/45px,
+   so nothing quite lined up along the bottom edge. */
+#chat-form { align-items: stretch; gap: var(--sp-2); }
+#chat-form #chat-input,
+#chat-form > button,
+#chat-form .compose-picker-button {
+  min-height: var(--h-control);
+  height: var(--h-control);
+}
+/* chat-safety.css pins these to 44px; without min-width they would stay 44 wide
+   while the row shrank to 42, leaving slightly oblong buttons. */
+#chat-form .compose-picker-button {
+  width: var(--h-control);
+  min-width: var(--h-control);
+  padding: 0;
+}
+
+.chat-search { min-height: var(--h-compact); }
+
+/* ── Radii settle on three values ────────────────────────────────────── */
+.card, .voice-tile, .connection-info, .themes-clean, .minecraft-link,
+.diag-section, .danger-zone, .rc-toast {
+  border-radius: var(--r-card);
+}
+.diag-step, .notify-group { border-radius: var(--r-control); }
+
+/* ── Range sliders ───────────────────────────────────────────────────── */
+/* The filled portion is driven by --range-value, which audio-settings.js
+   already maintains; before this only the thumb was themed. */
+/* Specificity note: audio-settings.css styles
+   `.sound-setting-controls input[type="range"]` (0,2,1), which outranks a bare
+   element selector, so the fill was silently dropped. These selectors match it. */
+.sound-setting-controls input[type="range"],
+.setting-item-clean input[type="range"],
+.range-clean input[type="range"],
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    to right,
+    var(--om-purple) 0%,
+    var(--om-purple-bright) var(--range-value, 70%),
+    #26313a var(--range-value, 70%),
+    #26313a 100%);
+  box-shadow: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3ecff;
+  border-radius: 50%;
+  background: var(--om-purple-bright);
+  box-shadow: 0 2px 6px #0007;
+  transition: transform 120ms ease;
+}
+input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.12); }
+input[type="range"]:active::-webkit-slider-thumb { transform: scale(0.96); }
+input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--om-purple-bright); outline-offset: 2px; }
+
+/* Settings uses a vertical sidebar of tabs (Discord/Steam style); its layout
+   lives in audio-settings.css. Radii are the only thing normalised here. */
+.settings-tabs button { border-radius: 8px; }
+.settings-pane[hidden] { display: none; }
+.setting-copy { display: grid; gap: 2px; min-width: 0; }
+.setting-copy small { line-height: 1.45; }
+
+/* ── Content area fills the window; the active page owns the remaining height. */
+main { display: flex; flex-direction: column; min-height: 0; }
+main > .page.active { flex: 1 1 auto; min-height: 0; }
+main > .page.active:not(#chat) { overflow-y: auto; }
+
+/* Voice and map are viewport workspaces, not long settings pages. Their inner
+   content owns the available height, so an empty channel or map never creates
+   a meaningless page scrollbar. */
+#voice.page.active,
+#map.page.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+#voice > header,
+#map > header {
+  flex: 0 0 auto;
+}
+#voice > .card,
+#map > .map {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  margin-top: 18px;
+}
+#voice .voice-list {
+  min-height: 0;
+}
+
+/* ── Chat: fit the viewport, scroll the feed, pin the composer ────────────
+   Previously the feed grew with its messages, pushing the whole card — and the
+   message input — below the bottom of the window. Only the feed scrolls now. */
+#chat.page.active { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+#chat > header { flex: none; }
+#chat .grid { flex: 1; min-height: 0; align-items: stretch; }
+#chat .grid > .card:first-child { display: flex; flex-direction: column; min-height: 0; }
+#chat .grid > .card:first-child > .row { flex: none; }
+#chat #feed { flex: 1; min-height: 0; overflow-y: auto; }
+#chat #chat-form { flex: none; }
+#chat .stack { min-height: 0; overflow-y: auto; align-content: start; overscroll-behavior: contain; }
+
+.feed { gap: var(--sp-1); }
+.message { padding: var(--sp-2); }
+.meta { gap: var(--sp-2); }
+.person-button { border-radius: var(--r-control); padding: var(--sp-2); }
+
+/* ── Cards get consistent inner padding ─────────────────────────────── */
+.card { padding: var(--sp-4); }
+#chat .grid { gap: var(--sp-4); }
+.stack { gap: var(--sp-4); }
+
+@media (max-width: 900px) {
+  .settings-tabs button { font-size: 12px; padding: 0 var(--sp-2); }
+  .setting-item-clean { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
+  .setting-item-clean > input:not([type="checkbox"]),
+  .setting-item-clean > select { width: 100%; }
+}
+@import url("./product-fixes.css");
+
+/* Keep the application shell invisible until the onboarding decision is known.
+   This prevents the chat page flashing before the welcome screen on first run. */
+body.boot-pending > .app {
+  visibility: hidden;
+}
+
+/* Unified settings surfaces */
+#settings .settings {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+#settings .settings-tabs {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--om-border);
+  border-radius: var(--r-card);
+  background: var(--om-panel);
+}
+#settings .settings-tabs button {
+  min-height: 48px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: var(--om-muted);
+  text-align: left;
+  font-weight: 700;
+}
+#settings .settings-tabs button:hover {
+  color: var(--om-text);
+  background: rgba(255,255,255,.035);
+}
+#settings .settings-tabs button.is-active {
+  color: #fff;
+  background: var(--om-purple);
+}
+#settings .settings-pane {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--om-border);
+  border-radius: var(--r-card);
+  background: var(--om-panel);
+}
+#settings .setting-item-clean,
+#settings .sound-setting-row,
+#settings .sound-section-title,
+#settings .audio-device-grid,
+#settings .connection-info,
+#settings .settings-more,
+#settings .diag-section,
+#settings .danger-zone,
+#settings .server-mods-settings,
+#settings .server-setup-settings {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--om-border);
+  border-radius: var(--r-control);
+  background: rgba(6, 12, 17, .2);
+}
+#settings .settings-pane > * + * {
+  margin-top: 12px;
+}
+#settings .setting-item-clean,
+#settings .sound-setting-row,
+#settings .sound-section-title {
+  display: grid;
+  grid-template-columns: minmax(260px, .78fr) minmax(460px, 1.22fr);
+  align-items: center;
+  gap: 24px;
+}
+#settings .sound-setting-controls {
+  display: grid;
+  grid-template-columns: minmax(210px, 1.15fr) minmax(110px, .85fr) 48px 48px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+#settings .voice-volume-controls {
+  grid-template-columns: minmax(180px, 1fr) 48px;
+}
+#settings .refresh-devices {
+  justify-self: end;
+  width: auto;
+  min-width: 190px;
+}
+#settings .audio-device-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+#settings .audio-device-grid label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+}
+#settings .settings-more {
+  display: grid;
+  gap: 14px;
+}
+#settings .settings-more > .settings-more-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+@media (max-width: 1050px) {
+  #settings .setting-item-clean,
+  #settings .sound-setting-row,
+  #settings .sound-section-title {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #settings .sound-setting-controls {
+    grid-template-columns: minmax(150px, 1fr) minmax(100px, .8fr) 44px auto;
+  }
+}
+
+@media (max-width: 760px) {
+  #settings .settings-tabs {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #settings .settings-tabs button {
+    text-align: center;
+  }
+  #settings .settings-pane {
+    padding: 12px;
+  }
+  #settings .sound-setting-controls,
+  #settings .audio-device-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Profile: one compact identity surface followed by a clear avatar library. */
+#profile .profile {
+  display: grid;
+  gap: 16px;
+  max-width: 1120px;
+}
+.profile-identity-card {
+  display: grid;
+  grid-template-columns: minmax(240px, .7fr) minmax(320px, 1.3fr);
+  gap: 28px;
+  align-items: center;
+  padding: 22px;
+  border: 1px solid var(--om-border);
+  border-radius: var(--r-card);
+  background: linear-gradient(135deg, rgba(152, 92, 214, .12), rgba(12, 20, 26, .35) 46%);
+}
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+.profile-head #profile-avatar {
+  flex: 0 0 112px;
+  width: 112px;
+  height: 112px;
+  border-radius: 20px;
+  background: rgba(6, 12, 17, .45);
+  border: 1px solid rgba(190, 139, 242, .45);
+  overflow: hidden;
+}
+.profile-head #profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.profile-head h2 {
+  margin: 4px 0;
+  font-size: 24px;
+}
+.profile-head small,
+.profile-head span,
+.profile-avatar-library p {
+  color: var(--om-muted);
+}
+.profile-name-field {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+.profile-name-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 18px;
+  color: var(--om-muted);
+  font-weight: 500;
+}
+#profile-name-error:not(:empty) {
+  color: #ff9da8;
+}
+.profile-avatar-library {
+  padding: 20px;
+  border: 1px solid var(--om-border);
+  border-radius: var(--r-card);
+  background: rgba(6, 12, 17, .2);
+}
+.profile-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.profile-section-heading h2,
+.profile-section-heading p {
+  margin: 0;
+}
+.profile-section-heading span {
+  padding: 6px 10px;
+  border: 1px solid rgba(190, 139, 242, .35);
+  border-radius: 999px;
+  color: #d9b9fa;
+  background: rgba(152, 92, 214, .1);
+  white-space: nowrap;
+  font-size: 12px;
+}
+#profile .avatars {
+  max-height: 340px;
+  overflow: auto;
+  align-content: start;
+}
+#profile #save-profile {
+  justify-self: end;
+  min-width: 210px;
+}
+
+/* Setup wizard alignment and small-window safety. */
+.setup-backdrop {
+  overflow: auto;
+  padding: 28px;
+}
+.setup-dialog {
+  margin: auto;
+  max-height: calc(100vh - 56px);
+  overflow: auto;
+}
+.setup-connect > h1,
+.setup-connect > p {
+  text-align: center;
+}
+.setup-host-summary > div:first-child {
+  text-align: center;
+}
+.setup-host-summary > div:first-child strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 24px;
+}
+.setup-address {
+  max-width: 720px;
+  width: 100%;
+  margin-inline: auto;
+}
+.setup-address > span:first-child {
+  display: block;
+  text-align: center;
+}
+.setup-reset-dialog {
+  width: min(640px, 100%);
+  padding: 0;
+  overflow: hidden;
+}
+.setup-reset-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.setup-reset-header > div { min-width: 0; }
+.setup-reset-header span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--om-purple-bright);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.setup-reset-header h2 { margin: 0 0 6px; }
+.setup-reset-header p {
+  margin: 0;
+  color: var(--om-muted);
+  font-size: 13px;
+}
+.setup-reset-header .dialog-close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--r-control);
+  background: rgba(255,255,255,.035);
+  color: var(--om-muted);
+}
+.setup-reset-header .dialog-close:hover {
+  border-color: rgba(183,133,230,.5);
+  background: rgba(152,92,214,.12);
+  color: #fff;
+}
+.setup-reset-header .dialog-close svg,
+.setup-reset-icon svg,
+.setup-reset-arrow {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.setup-reset-dialog .setup-reset-options {
+  display: grid;
+  gap: 10px;
+  padding: 18px 24px 10px;
+}
+.setup-reset-options > button {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 82px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--r-card);
+  background: rgba(255,255,255,.025);
+  color: var(--om-text);
+  text-align: left;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.setup-reset-options > button:hover,
+.setup-reset-options > button:focus-visible {
+  border-color: rgba(183,133,230,.55);
+  background: rgba(152,92,214,.1);
+}
+.setup-reset-options > button > span:nth-child(2) {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.setup-reset-options strong { font-size: 15px; }
+.setup-reset-options small {
+  color: var(--om-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.setup-reset-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-control);
+  background: rgba(152,92,214,.13);
+  color: var(--om-purple-bright);
+}
+.setup-reset-arrow { color: var(--om-muted); }
+.setup-reset-footnote {
+  margin: 0;
+  padding: 4px 24px 22px;
+  color: #7f8b92;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.server-mode-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.server-mode-option {
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--om-border);
+  border-radius: var(--r-control);
+  background: rgba(6, 12, 17, .28);
+  color: var(--om-text);
+  text-align: left;
+}
+.server-mode-option.is-selected {
+  border-color: var(--om-purple-bright);
+  box-shadow: inset 0 0 0 1px var(--om-purple-bright);
+  background: rgba(152, 92, 214, .12);
+}
+.server-mode-option strong,
+.server-mode-option small {
+  display: block;
+}
+.server-mode-option small {
+  margin-top: 6px;
+  color: var(--om-muted);
+}
+
+@media (max-width: 820px) {
+  .profile-identity-card {
+    grid-template-columns: 1fr;
+  }
+  .profile-section-heading {
+    align-items: flex-start;
+  }
+  .setup-reset-dialog .setup-reset-options,
+  .server-mode-picker {
+    grid-template-columns: 1fr;
+  }
+  #settings .host-basics-card > .setting-item-clean {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  #settings .host-settings-actions button {
+    width: 100%;
+  }
+}
+
+/* Settings rows use one Android-like information/action pattern.
+   Every top-level section has the same inset, copy column and control column,
+   regardless of which feature module created it. */
+#settings .settings-pane {
+  --settings-copy: minmax(230px, .78fr);
+  --settings-control: minmax(320px, 1.22fr);
+  grid-template-columns: minmax(0, 1fr);
+  padding: 12px;
+  overflow: visible;
+}
+#settings.page.active {
+  overflow-x: hidden;
+}
+#settings .settings-pane > .setting-item-clean,
+#settings .settings-pane > .settings-section-card,
+#settings .settings-pane > .connection-info,
+#settings .settings-pane > .diag-section,
+#settings .settings-pane > .settings-more,
+#settings .settings-pane > .danger-zone {
+  width: 100%;
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px solid transparent !important;
+  border-radius: 11px !important;
+  background: rgba(7, 14, 18, .36) !important;
+  box-shadow: none !important;
+}
+#settings .settings-pane > * + * {
+  margin-top: 10px;
+}
+#settings .settings-pane > .setting-item-clean,
+#settings .settings-pane > .settings-section-card {
+  display: grid;
+  grid-template-columns: var(--settings-copy) var(--settings-control);
+  align-items: center;
+  gap: 24px;
+  min-height: 92px;
+}
+#settings .settings-pane .setting-copy {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+#settings .settings-pane .setting-copy strong {
+  color: #eef2f3;
+  font-size: 15px;
+  line-height: 1.35;
+}
+#settings .settings-pane .setting-copy small {
+  max-width: 460px;
+  color: #929ea5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#settings .settings-pane input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+#settings .settings-pane select {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  pointer-events: auto !important;
+  -webkit-app-region: no-drag;
+}
+#settings .settings-pane button {
+  min-height: 42px;
+  padding: 9px 14px;
+  white-space: nowrap;
+}
+
+/* Host settings */
+#settings .host-inline-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+#settings .host-inline-control button,
+#settings .server-integration-setting > button {
+  justify-self: end;
+  min-width: 150px;
+}
+#settings .settings-pane > .host-basics-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding: 0 !important;
+  overflow: hidden;
+}
+#settings .settings-pane > .host-basics-card > .settings-section-heading {
+  display: block;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+#settings .host-basics-card > .settings-section-heading strong,
+#settings .host-basics-card > .settings-section-heading small {
+  display: block;
+}
+#settings .host-basics-card > .settings-section-heading small {
+  margin-top: 4px;
+  color: var(--om-muted);
+  font-size: 12px;
+}
+#settings .host-basics-card > .setting-item-clean {
+  display: grid;
+  grid-template-columns: var(--settings-copy) var(--settings-control);
+  align-items: center;
+  gap: 24px;
+  min-height: 88px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.055);
+}
+#settings .host-settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 20px 18px;
+}
+#settings .host-settings-actions button {
+  min-width: 190px;
+}
+#settings .host-settings-actions button.is-saved {
+  background: rgba(255,255,255,.07);
+  color: var(--om-muted);
+  box-shadow: none;
+}
+#settings .host-field-error {
+  grid-column: 2;
+  margin-top: -14px;
+  color: #ef929c;
+}
+#settings .danger-zone {
+  display: grid;
+  gap: 12px;
+  border-color: rgba(231, 104, 117, .18) !important;
+  background: rgba(106, 25, 37, .08) !important;
+}
+
+#chat header .online.is-temporary {
+  color: #e4bd68;
+}
+#settings .danger-row {
+  display: grid;
+  grid-template-columns: var(--settings-copy) var(--settings-control);
+  align-items: center;
+  gap: 24px;
+}
+#settings .danger-button {
+  justify-self: end;
+  min-width: 150px;
+}
+
+/* Connection settings */
+#settings .connection-info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  min-height: 92px;
+}
+#settings .connection-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+#settings .diag-section {
+  display: grid;
+  gap: 12px;
+}
+#settings .diag-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+}
+#settings .diag-run {
+  min-width: 128px;
+}
+#settings .diag-primary-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+#settings .diag-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+#settings .diag-ghost {
+  background: rgba(255,255,255,.045);
+}
+#settings .settings-more {
+  display: grid;
+  gap: 14px;
+  overflow: visible;
+}
+#settings .settings-more-title,
+#settings .settings-section-heading {
+  color: #eef2f3;
+  font-size: 14px;
+  font-weight: 750;
+}
+#settings .settings-more-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: 0;
+}
+#settings .settings-more-body > div {
+  display: grid;
+  gap: 5px;
+}
+#settings .settings-more-body strong {
+  color: #eef2f3;
+  font-size: 14px;
+}
+#settings .settings-more-body small {
+  max-width: 520px;
+  color: #929ea5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#settings .settings-more-body .rerun-setup {
+  justify-self: end;
+  min-width: 255px;
+  max-width: 320px;
+}
+
+/* Device selectors must remain the topmost interactive controls. */
+#settings .device-section-title,
+#settings .audio-device-grid {
+  position: relative;
+  isolation: isolate;
+}
+#settings .sound-section-title {
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  min-width: 0;
+}
+#settings .device-section-title {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+}
+#settings .audio-device-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+#settings .audio-device-grid label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+#settings .audio-device-grid select {
+  cursor: pointer;
+}
+#settings .sound-setting-row {
+  display: grid;
+  grid-template-columns: minmax(200px, .78fr) minmax(0, 1.22fr);
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+#settings .sound-setting-row + .sound-setting-row {
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+#settings .sound-setting-controls {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(90px, .72fr) 42px 38px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+}
+#settings .voice-volume-controls {
+  grid-template-columns: minmax(130px, 1fr) 46px;
+  width: 100%;
+}
+#settings .sound-setting-controls > * {
+  min-width: 0;
+}
+
+@media (max-width: 1050px) {
+  #settings .settings-pane {
+    --settings-copy: minmax(190px, .72fr);
+    --settings-control: minmax(250px, 1.28fr);
+  }
+  #settings .settings-pane > .setting-item-clean,
+  #settings .settings-pane > .settings-section-card,
+  #settings .danger-row {
+    gap: 18px;
+  }
+}
+@media (max-width: 820px) {
+  #settings .settings-pane > .setting-item-clean,
+  #settings .settings-pane > .settings-section-card,
+  #settings .danger-row,
+  #settings .settings-more-body {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #settings .host-field-error {
+    grid-column: 1;
+    margin-top: 0;
+  }
+  #settings .danger-button,
+  #settings .server-integration-setting > button,
+  #settings .settings-more-body .rerun-setup {
+    justify-self: start;
+  }
+  #settings .sound-setting-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+@media (max-width: 620px) {
+  #settings .connection-info,
+  #settings .diag-head,
+  #settings .host-inline-control,
+  #settings .audio-device-grid {
+    grid-template-columns: 1fr;
+  }
+  #settings .connection-actions,
+  #settings .diag-actions,
+  #settings .diag-primary-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  #settings .host-inline-control button {
+    justify-self: start;
+  }
+}

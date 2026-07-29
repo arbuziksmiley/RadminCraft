@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RadminCraft</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="tray.css">
+  <link rel="stylesheet" href="layout-fixes.css">
+  <link rel="stylesheet" href="minecraft-theme.css">
+  <link rel="stylesheet" href="voice-view.css">
+  <link rel="stylesheet" href="nav-fixes.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="avatar-crop.css">
+  <link rel="stylesheet" href="chat-safety.css">
+  <link rel="stylesheet" href="setup-wizard.css">
+  <link rel="stylesheet" href="setup-help.css">
+  <link rel="stylesheet" href="map-view.css">
+  <link rel="stylesheet" href="audio-settings.css">
+  <link rel="stylesheet" href="voice-invites.css">
+  <link rel="stylesheet" href="server-mods.css">
+  <link rel="stylesheet" href="diagnostics-view.css">
+  <link rel="stylesheet" href="notifications.css">
+  <link rel="stylesheet" href="voice-mini.css">
+  <link rel="stylesheet" href="server-setup.css">
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="product-fixes.css">
+  <script src="notifications.js" defer></script>
+  <script src="avatar-crop.js" defer></script>
+  <script src="settings-layout.js" defer></script>
+  <script src="voice-view.js" defer></script>
+  <script src="voice-mini.js" defer></script>
+  <script src="nav-fixes.js" defer></script>
+  <script src="enhancements.js" defer></script>
+  <script src="chat-safety.js" defer></script>
+  <script src="setup-wizard.js" defer></script>
+  <script src="setup-help.js" defer></script>
+  <script src="map-view.js" defer></script>
+  <script src="voice-invites.js" defer></script>
+  <script src="audio-settings.js" defer></script>
+  <script src="server-name.js" defer></script>
+  <script src="server-mods.js" defer></script>
+  <script src="connection-extras.js" defer></script>
+  <script src="notification-settings.js" defer></script>
+  <script src="diagnostics-view.js" defer></script>
+  <script src="host-tools.js" defer></script>
+  <script src="server-setup.js" defer></script>
+</head>
+<body data-theme="soft" class="boot-pending">
+  <div class="app">
+    <aside class="side">
+      <div class="brand">RadminCraft</div>
+      <nav>
+        <button class="nav active" data-page="chat">Общий чат</button>
+        <button class="nav" data-page="voice">Голосовой чат</button>
+        <button class="nav" data-page="map">Карта</button>
+        <button class="nav" data-page="settings">Настройки</button>
+      </nav>
+      <button class="self nav" data-page="profile">
+        <b id="self-avatar">В</b>
+        <span><strong id="self-name">Вы</strong><small class="network">● в сети</small></span>
+      </button>
+    </aside>
+    <main>
+      <section id="chat" class="page active">
+        <header>
+          <div><h1>RadminCraft SMP <em>1.20.1 Forge</em></h1><p>Один чат для сообщества и игры</p></div>
+          <strong class="online">● Сервер запущен</strong>
+        </header>
+        <div class="grid">
+          <article class="card">
+            <div class="row"><h2>Общий чат</h2><small>Последние 500 сообщений</small></div>
+            <div id="feed" class="feed"></div>
+            <form id="chat-form"><input id="chat-input" maxlength="600" placeholder="Написать всем…" autocomplete="off"><button>Отправить</button></form>
+          </article>
+          <aside class="stack">
+            <article class="card"><div class="row"><h2>Онлайн</h2><em>4</em></div><div id="online-list"></div></article>
+            <article class="card"><em>Minecraft</em><h2>Ваш лаунчер</h2><p>Открывается только на вашем компьютере.</p><button id="launch">Запустить лаунчер</button></article>
+          </aside>
+        </div>
+      </section>
+      <section id="voice" class="page">
+        <header><div><h1>Голосовой чат</h1><p>Общий голосовой канал</p></div><em>Подключено</em></header>
+        <article class="card">
+          <div class="row"><h2>RadminCraft SMP</h2><button id="mic">Микрофон включён</button></div>
+          <p>Здесь только участники, подключённые к голосовому каналу.</p>
+          <div id="voice-list"></div>
+        </article>
+      </section>
+      <section id="map" class="page">
+        <header><div><h1>Карта</h1><p>Веб-карта сервера</p></div></header>
+        <article class="card map">База <span>Деревня</span></article>
+      </section>
+      <section id="settings" class="page">
+        <header><div><h1>Настройки</h1><p>Профиль сообщества, уведомления и диагностика</p></div></header>
+        <article class="card settings">
+          <label>Путь к лаунчеру<input id="launcher-path" placeholder="C:\Games\Launcher.exe"></label>
+          <label>Громкость <output id="volume-out">70%</output><input id="volume" type="range" min="0" max="100"></label>
+          <label>Уведомления<input id="notify" type="checkbox"></label>
+          <button id="save-settings">Сохранить настройки</button>
+        </article>
+      </section>
+      <section id="profile" class="page">
+        <header><div><h1>Ваш профиль</h1><p>Имя и голова, которые видят участники сообщества</p></div></header>
+        <article class="card profile">
+          <section class="profile-identity-card">
+            <div class="profile-head">
+              <b id="profile-avatar">В</b>
+              <div><small>Ваш профиль</small><h2 id="profile-title">Вы</h2><span>Отображается в чате и голосовом канале</span></div>
+            </div>
+            <label class="profile-name-field">
+              Отображаемое имя
+              <input id="display-name" maxlength="20" placeholder="Например: Нагибатор или Angelochek">
+              <span class="profile-name-meta"><small id="profile-name-error" aria-live="polite"></small><small id="profile-name-count">0/20</small></span>
+            </label>
+          </section>
+          <section class="profile-avatar-library">
+            <div class="profile-section-heading"><div><h2>Голова персонажа</h2><p>Выберите одну из 150 уникальных голов</p></div><span>150 вариантов</span></div>
+            <div id="avatars" class="avatars"><button data-avatar="В">В</button></div>
+          </section>
+          <p id="rebind" class="warning" hidden></p>
+          <button id="save-profile">Сохранить изменения</button>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

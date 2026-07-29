@@ -1,0 +1,16 @@
+[
+{
+  "modid": "radmincraft_bridge",
+  "name": "RadminCraft Bridge",
+  "description": "Stable local bridge between a Forge server or LAN world and the RadminCraft desktop application.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["RadminCraft"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,133 @@
+/* Notification overlay — a frameless transparent window pinned to the bottom
+   right of the screen. Styled with the Obsidian Meadow tokens so the toasts
+   read as part of RadminCraft rather than as Windows notifications. */
+
+:root {
+  --om-bg-raised: #0f1519;
+  --om-panel: #12191e;
+  --om-line: #2b363e;
+  --om-text: #eef2f3;
+  --om-muted: #9aa6ad;
+  --om-purple: #9a6adb;
+  --om-purple-bright: #b78bef;
+  --om-green-bright: #9bd172;
+  --om-amber: #d9a441;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  color: var(--om-text);
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 2px;
+}
+
+.toast {
+  --ring: var(--om-purple-bright);
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 30px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 14px;
+  border: 1px solid var(--om-line);
+  border-radius: 12px;
+  /* Slightly translucent so it sits on the desktop without looking pasted on,
+     with a hairline of the event colour down the leading edge. */
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--ring) 16%, transparent), transparent 42%),
+    #101820f7;
+  box-shadow: 0 16px 44px #000b, 0 0 0 1px #ffffff08 inset;
+  animation: toast-in 240ms cubic-bezier(0.16, 0.9, 0.3, 1) both;
+}
+.toast::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 12px; bottom: 12px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ring);
+}
+.toast.is-leaving { animation: toast-out 200ms ease-in both; }
+.toast:hover { border-color: color-mix(in srgb, var(--ring) 55%, var(--om-line)); }
+
+.toast.join { --ring: var(--om-green-bright); }
+.toast.mention { --ring: var(--om-purple-bright); }
+.toast.voice { --ring: var(--om-amber); }
+.toast.message { --ring: #7fa8c9; }
+
+.icon {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--ring) 17%, transparent);
+  color: var(--ring);
+}
+.icon svg { width: 20px; height: 20px; }
+
+.copy { display: grid; gap: 2px; min-width: 0; }
+.copy b { font-size: 13.5px; font-weight: 620; line-height: 1.3; }
+.copy small {
+  font-size: 12.5px;
+  color: var(--om-muted);
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Countdown ring doubles as the close button. */
+.close {
+  position: relative;
+  width: 30px; height: 30px;
+  padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: transparent;
+  color: var(--om-muted);
+  cursor: pointer;
+}
+.close:hover { color: var(--om-text); background: #ffffff10; }
+.close:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.ring { position: absolute; inset: 1px; width: 28px; height: 28px; pointer-events: none; }
+.ring circle { fill: none; stroke-width: 2.4; }
+.ring .bg { stroke: #ffffff16; }
+.ring .fg {
+  stroke: var(--ring);
+  stroke-linecap: round;
+  stroke-dasharray: 75.4;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  animation: countdown linear both;
+}
+.toast.is-paused .ring .fg { animation-play-state: paused; }
+.x { font-size: 15px; line-height: 1; }
+
+@keyframes countdown { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 75.4; } }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(28px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes toast-out {
+  to { opacity: 0; transform: translateX(28px) scale(0.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast, .toast.is-leaving { animation: none; }
+  .ring .fg { animation: none; stroke-dashoffset: 26; }
+}

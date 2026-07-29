@@ -1,0 +1,4 @@
+.side nav .nav { display: flex; align-items: center; gap: 10px; }
+.side nav .nav-icon { width: 18px; flex: 0 0 18px; display: inline-grid; place-items: center; text-align: center; }
+.side nav .nav-icon img { width: 18px; height: 18px; display: block; }
+.side nav .nav-label { min-width: 0; }

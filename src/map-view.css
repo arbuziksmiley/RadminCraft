@@ -1,0 +1,24 @@
+.map { position: relative; min-height: min(680px, calc(100vh - 132px)); overflow: hidden; padding: 0; border: 1px solid #33423b; background: #0b1115; }
+.map span { position: static; inset: auto; padding: 0; background: transparent; }
+.journeymap-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #10171b; }
+.journeymap-frame[hidden], .map-empty[hidden], .map-overlay[hidden], .map-players[hidden], .map-host-settings[hidden] { display: none; }
+.map-empty { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; justify-items: center; gap: 12px; padding: 36px; text-align: center; background: radial-gradient(circle at 50% 45%, #4261432b, transparent 27%), linear-gradient(145deg, #101a16, #091015); }
+.map-empty::before { content: ''; position: absolute; inset: 0; opacity: .16; background-image: linear-gradient(30deg, #6c8b5e 12%, transparent 12.5%, transparent 87%, #6c8b5e 87.5%), linear-gradient(150deg, #6c8b5e 12%, transparent 12.5%, transparent 87%, #6c8b5e 87.5%); background-size: 72px 126px; mask-image: radial-gradient(circle, #000, transparent 64%); pointer-events: none; }
+.map-empty > * { position: relative; z-index: 1; }
+.map-empty-icon { display: grid; place-items: center; width: 70px; height: 70px; border: 1px solid #8fbe684d; border-radius: 18px; background: #18261b; color: #9bd172; font-size: 34px; box-shadow: 0 12px 38px #0006, 0 0 30px #789d5540; }
+.map-empty h2 { margin: 6px 0 0; font-size: 22px; }.map-empty p { max-width: 580px; margin: 0; }
+.map-empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 5px; }
+.map-empty-actions button:first-child, .map-host-settings button { border-color: #a87adb66; background: linear-gradient(180deg, #a16cdb, #8050b8); color: #fff; }
+.map-instruction { display: block; max-width: 650px; margin-top: 7px; line-height: 1.45; }
+.map-host-settings { display: grid; grid-template-columns: 150px minmax(250px, 1fr) auto; align-items: end; gap: 10px; width: min(760px, 90vw); margin-top: 5px; padding: 14px; border: 1px solid #334139; border-radius: 11px; background: #0b1210cf; text-align: left; }
+.map-host-settings label { display: grid; gap: 6px; color: #aeb8be; font-size: 12px; }
+.map-host-settings input { width: 100%; min-height: 40px; padding: 8px 10px; }
+/* Pinned to the bottom-centre so it never covers BlueMap's own controls, which
+   sit in the corners (layer menu top-left, markers top-right). Fades to low
+   opacity until hovered so it stays out of the way while reading the map. */
+.map-overlay { position: absolute; z-index: 3; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid #3a464c; border-radius: 11px; background: #0d151af2; backdrop-filter: blur(10px); box-shadow: 0 10px 28px #0007; opacity: .55; transition: opacity 160ms ease; }
+.map-overlay:hover { opacity: 1; }
+.map-overlay > div { display: grid; gap: 1px; padding: 0 6px; }.map-overlay small { max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.map-overlay button { min-height: 32px; padding: 5px 10px; font-size: 12px; }
+.map-players { position: absolute; z-index: 3; top: 14px; right: 14px; width: 210px; max-height: calc(100% - 28px); overflow: auto; padding: 13px; border: 1px solid #3a464c; border-radius: 11px; background: #0d151aeb; backdrop-filter: blur(10px); box-shadow: 0 10px 28px #0007; }
+.map-players > strong { display: block; margin-bottom: 8px; color: #edf1f2; font-size: 12px; }.map-players > div { display: grid; gap: 5px; }.map-players span { display: flex; align-items: center; justify-content: space-between; gap: 9px; padding: 6px 7px; border-radius: 7px; background: #ffffff08; }.map-players b { color: #9bd172; font-size: 12px; }.map-players small { font: 10px ui-monospace, monospace; }
+@media (max-width: 760px) { .map-host-settings { grid-template-columns: 1fr; } .map-overlay [data-map-external] { display: none; } .map-players { top: auto; bottom: 14px; } }

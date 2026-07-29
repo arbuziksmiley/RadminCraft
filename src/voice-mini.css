@@ -1,0 +1,45 @@
+/* Compact active-call widget on the chat sidebar. */
+.voice-mini { display: grid; gap: 12px; }
+.voice-mini[hidden] { display: none; }
+
+.vm-head { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.vm-avatar {
+  position: relative;
+  flex: none;
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  display: grid; place-items: center;
+  font-weight: 700;
+  box-shadow: 0 0 0 0 #9bd17200;
+  transition: box-shadow 200ms ease;
+}
+.vm-avatar.is-speaking {
+  box-shadow: 0 0 0 2px #9bd172, 0 0 16px #9bd17255;
+}
+.vm-copy { display: grid; gap: 1px; min-width: 0; }
+.vm-copy strong {
+  font-size: 13.5px; font-weight: 620;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.vm-copy small { font-size: 12px; color: var(--om-muted, #8f9ba3); }
+.vm-copy small.is-speaking { color: var(--om-green-bright, #9bd172); }
+
+.vm-controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.vm-btn {
+  display: grid; place-items: center;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid var(--om-line, #27323a);
+  border-radius: 9px;
+  background: #141c21;
+  color: #cdd5da;
+}
+.vm-btn svg { width: 18px; height: 18px; }
+.vm-btn:hover { border-color: #6f538e; background: #1c242b; color: #fff; }
+.vm-btn.is-off {
+  border-color: #e7687555;
+  background: #e7687514;
+  color: #f0a6ad;
+}
+.vm-leave { border-color: #e7687540; color: #f0a6ad; }
+.vm-leave:hover { border-color: #e76875; background: #e7687522; color: #fff; }

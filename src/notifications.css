@@ -1,0 +1,27 @@
+/* Notification settings.
+   The toasts themselves live in the overlay window and are styled by
+   src/toast.css — nothing in the main window draws them any more. */
+
+/* Indented sub-options under the master notifications toggle. Nested inside
+   .notify-group they miss the pane's grid rule, so lay them out as rows here:
+   label + description on the left, toggle on the right. */
+.notify-group {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0 0 2px;
+  padding-left: 16px;
+  border-left: 2px solid var(--om-line-soft, #202a31);
+}
+.notify-group.is-disabled { opacity: 0.45; }
+.notify-group .setting-item-clean.notify-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 0;
+  padding: 11px 0;
+}
+.notify-group .notify-sub:not(:last-child) { border-bottom: 1px solid #ffffff08; }
+.notify-group .notify-sub .setting-copy { display: grid; gap: 2px; min-width: 0; }
+.notify-group .notify-sub .setting-copy small { display: block; line-height: 1.4; color: var(--om-muted, #8f9ba3); }
+.notify-group .notify-sub input[type="checkbox"] { flex: none; }

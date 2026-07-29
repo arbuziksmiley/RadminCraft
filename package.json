@@ -1,0 +1,94 @@
+{
+  "name": "radmincraft",
+  "version": "0.4.0",
+  "private": true,
+  "description": "RadminCraft",
+  "author": "RadminCraft",
+  "homepage": "https://github.com/arbuziksmiley/RadminCraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arbuziksmiley/RadminCraft.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arbuziksmiley/RadminCraft/issues"
+  },
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "node_modules\\electron\\dist\\electron.exe .",
+    "check": "node --check electron/main.js && node --check electron/updater.js && node --check electron/preload.js && node --check electron/preload-toast.js && node --check electron/protocol.js && node --check electron/failover.js && node --check src/renderer.js && node --check src/settings-layout.js && node --check src/nav-fixes.js && node --check src/server-name.js && node --check src/enhancements.js && node --check src/avatar-crop.js && node --check src/chat-safety.js && node --check src/voice-view.js && node --check src/voice-mini.js && node --check src/setup-wizard.js && node --check src/setup-help.js && node --check src/map-view.js && node --check src/ui-sounds.js && node --check src/audio-settings.js && node --check src/voice-invites.js && node --check src/server-mods.js && node --check src/connection-extras.js && node --check src/diagnostics-view.js && node --check src/notifications.js && node --check src/notification-settings.js && node --check src/host-tools.js && node --check src/server-setup.js && node --check electron/server-bridge.js && node --check src/toast.js",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "dist": "electron-builder --win --x64 --publish never",
+    "release:github": "electron-builder --win --x64 --publish always",
+    "clean": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Clean-Generated.ps1"
+  },
+  "build": {
+    "appId": "com.radmincraft.desktop",
+    "productName": "RadminCraft",
+    "copyright": "RadminCraft",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "src/**/*",
+      "package.json",
+      "!**/*.map",
+      "!src/assets/generated/**/*",
+      "!src/assets/stickers/emotion-pack-sheet-*-alpha.png"
+    ],
+    "extraResources": [
+      {
+        "from": "forge-bridge/dist",
+        "to": "forge-bridge",
+        "filter": [
+          "*-1.1.0.jar"
+        ]
+      }
+    ],
+    "extraMetadata": {
+      "main": "electron/main.js"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "arbuziksmiley",
+      "repo": "RadminCraft",
+      "releaseType": "release"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "electron/app-icon.ico",
+      "artifactName": "RadminCraft-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "RadminCraft",
+      "installerLanguages": [
+        "ru_RU"
+      ],
+      "language": "1049",
+      "deleteAppDataOnUninstall": false
+    }
+  },
+  "devDependencies": {
+    "electron": "43.1.1",
+    "electron-builder": "26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.9"
+  },
+  "overrides": {
+    "brace-expansion": "5.0.8"
+  }
+}
