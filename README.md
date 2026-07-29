@@ -106,8 +106,6 @@ npm run dist
 npm run clean
 ```
 
-Следующему разработчику или сеансу Codex сначала нужно прочитать [AGENTS.md](AGENTS.md) и [AI_PROJECT_HANDOFF.md](AI_PROJECT_HANDOFF.md).
-
 ## Документация
 
 - [Контекст и состояние проекта](AI_PROJECT_HANDOFF.md)
