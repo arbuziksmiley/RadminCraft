@@ -1,4 +1,4 @@
-# Проверка релиза 0.4.0
+# Проверка релиза 0.4.1
 
 Дата подготовки: 30 июля 2026.
 
@@ -11,7 +11,7 @@
 - [x] electron-builder 26.15.3 собрал Windows x64 NSIS;
 - [x] упакованный `RadminCraft.exe` запущен с чистым временным профилем;
 - [x] renderer завершил smoke-test с кодом 0;
-- [x] `latest.yml` содержит версию 0.4.0;
+- [x] `latest.yml` содержит версию 0.4.1;
 - [x] `app-update.yml` указывает `arbuziksmiley/RadminCraft`;
 - [x] в resources находятся пять Forge Bridge JAR 1.1.0;
 - [x] SHA-256 всех Bridge JAR совпадает с `forge-bridge/dist/SHA256SUMS.txt`;
@@ -24,15 +24,13 @@
 
 ## Артефакты
 
-- `release/RadminCraft-Setup-0.4.0.exe`;
-- `release/RadminCraft-Setup-0.4.0.exe.blockmap`;
+- `release/RadminCraft-Setup-0.4.1.exe`;
+- `release/RadminCraft-Setup-0.4.1.exe.blockmap`;
 - `release/latest.yml`;
 - `release/SHA256SUMS.txt`;
 - `release/win-unpacked/RadminCraft.exe`.
 
-SHA-256 установщика:
-
-`0ABFA65F7684C40935FB07C1495EC1CDAEFD1D13B363AE47AC8FB4D3D8893448`
+SHA-256 установщика публикуется в `SHA256SUMS.txt`, созданном GitHub Actions.
 
 ## Что нельзя честно проверить на одном компьютере
 
@@ -41,7 +39,7 @@ SHA-256 установщика:
 - [ ] выбор временного Host и возврат основного;
 - [ ] Bridge на каждой из пяти версий Forge;
 - [ ] BlueMap на реальном сервере;
-- [ ] автообновление 0.4.0 → 0.4.1 из опубликованного GitHub Release;
+- [ ] автообновление 0.4.1 → следующая версия из опубликованного GitHub Release;
 - [ ] Windows 11 (сборка создана на Windows 10).
 
 Эти пункты являются ручным beta-тестом, а не причиной объявлять проверенные
