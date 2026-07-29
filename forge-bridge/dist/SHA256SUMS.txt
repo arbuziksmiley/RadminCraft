@@ -1,0 +1,5 @@
+529e92e90bc139a792fb2d04694541ba6f31de728212d884495c2a5c9d6bca74 *RadminCraft-Bridge-Forge-1.12.2-1.1.0.jar
+1141785ff6ebc8d3c5ebf9cee76eb14fd95485e9ed7f09cec16ca5f6090a3d83 *RadminCraft-Bridge-Forge-1.16.5-1.1.0.jar
+efd56beb227ebbd002b29a88097c0203eeac42d36a1f52efc5096538ef43b038 *RadminCraft-Bridge-Forge-1.18.2-1.1.0.jar
+f4d1dc08043111bf48f93f4fc723418f153c5aa747a7398c70f8d0cfc946ef51 *RadminCraft-Bridge-Forge-1.19.2-1.1.0.jar
+65a601742e82969a91fad364eedfce964a93bfd14d15af4b3097782ac09d0919 *RadminCraft-Bridge-Forge-1.20.1-1.1.0.jar
